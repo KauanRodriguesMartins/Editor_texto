@@ -1,16 +1,41 @@
-﻿void Exibir_arquivo()
+﻿List<String> SaveMemory = new List<String>();
+
+void Ler_arquivo()
 {
     const string filepath = "C:\\EditText\\Arquivo_teste.txt";
+    SaveMemory.Clear();
 
     var data = File.ReadAllLines(filepath);
-    var count = 0;
+    SaveMemory.AddRange(data);
+}
+void Exibir_arquivo()
+{
+    Console.Clear();
 
-    foreach (var linha in data)
+    int linha = 1;
+    foreach (var texto in SaveMemory)
     {
-        count++;
-        Console.WriteLine($"Linha {count} - {linha}");
+        Console.WriteLine($"{linha,3} | {texto}");
+        linha++;
+    }
+
+    Console.WriteLine("\n-- Precione a tecla Esc para sair");
+}
+
+void LoopEditor()
+{
+    while (true)
+    {
+        Exibir_arquivo();
+
+        var tecla = Console.ReadKey(true);
+
+        if (tecla.Key == ConsoleKey.Escape)
+            break;
+        Console.Clear();
     }
 }
+
 
 int opc;
 
@@ -27,7 +52,16 @@ do {
     switch (opc)
     {
         case 1:
-            Exibir_arquivo();
+            if (SaveMemory.Count == 0)
+            {
+                Ler_arquivo();
+                LoopEditor();
+            }
+            else
+            {
+                LoopEditor();
+            }
+                
         break;
 
         case 2:
