@@ -1,4 +1,14 @@
-﻿List<String> SaveMemory = new List<String>();
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Runtime.CompilerServices;
+using System.Windows.Forms;
+
+List<string> SaveMemory = new List<string>();
+
+int CursorLinha = 0;
+int CursorColuna = 0;
 
 void Ler_arquivo()
 {
@@ -7,14 +17,15 @@ void Ler_arquivo()
 
     var data = File.ReadAllLines(filepath);
     SaveMemory.AddRange(data);
+    
 }
 void Exibir_arquivo()
 {
     Console.Clear();
-
+    
     int linha = 1;
     foreach (var texto in SaveMemory)
-    {
+    { 
         Console.WriteLine($"{linha,3} | {texto}");
         linha++;
     }
