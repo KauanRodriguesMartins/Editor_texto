@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 List<string> SaveMemory = new List<string>();
 
-int CursorLinha = 0;
+int CursorLinha = 1;
 int CursorColuna = 0;
 
 void Ler_arquivo()
@@ -26,11 +26,26 @@ void Exibir_arquivo()
     int linha = 1;
     foreach (var texto in SaveMemory)
     { 
-        Console.WriteLine($"{linha,3} | {texto}");
-        linha++;
+        if(linha == CursorLinha)
+        {
+            Console.ForegroundColor = ConsoleColor.DarkGreen;
+            Console.WriteLine($">{linha,3} | {texto}");
+            linha++;
+            Console.ResetColor();
+            
+        }
+        else
+        {
+            Console.WriteLine($"{linha,3} | {texto}");
+            linha++;
+            
+        }
+        
     }
 
     Console.WriteLine("\n-- Precione a tecla Esc para sair");
+    Console.WriteLine("\n-- Precione a tecla K para subir");
+    Console.WriteLine("\n-- Precione a tecla J para descer");
 }
 
 void LoopEditor()
@@ -40,10 +55,28 @@ void LoopEditor()
         Exibir_arquivo();
 
         var tecla = Console.ReadKey(true);
+       
 
         if (tecla.Key == ConsoleKey.Escape)
             break;
         Console.Clear();
+
+        if(CursorLinha > 1)
+        {
+            if(tecla.Key == ConsoleKey.K)
+            {
+                CursorLinha --;
+            }
+        }
+
+        if(CursorLinha < SaveMemory.Count)
+        {
+            if(tecla.Key == ConsoleKey.J)
+            {
+                CursorLinha ++;
+            }
+        }
+      
     }
 }
 
