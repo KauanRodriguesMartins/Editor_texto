@@ -28,3 +28,52 @@ Log de mudanças
 - Melhoria da usabilidade
     > Instruções exibidas no rodapé do editor
     > Visual mais claro para navegação
+
+
+#20/01/2026
+- Implementação do modo insert (edição)
+    > Criação de estado para alternar entre modo normal e modo de edição
+    > Entrada no modo insert através da tecla I
+    > Retorno ao modo normal com Esc
+- Separação de comportamentos por modo
+    > Navegação (J / K) ativa apenas no modo normal
+    > Entrada de texto permitida apenas no modo insert
+    > Tratamento contextual de teclas conforme o estado do editor
+- Inserção de texto no buffer
+    > Digitação de caracteres adicionando conteúdo à linha atual
+    > Manipulação correta de strings no SaveMemory
+    > Atualização dinâmica do conteúdo exibido
+- Implementação do Backspace
+    > Remoção do último caractere da linha atual
+    > Validação para evitar erro em linhas vazias
+    > Comportamento restrito ao modo insert
+- Implementação do Enter (quebra de linha simples)
+    > Inserção de nova linha vazia no buffer
+    > Uso de List.Insert para modificar o texto em memória
+    > Movimentação automática do cursor para a nova linha
+- Consolidação do modelo de dados do editor
+    > Cada linha do arquivo representada como uma string
+    > Texto completo tratado como List<string> (buffer de texto)
+    > Cursor vertical mapeado diretamente ao índice da lista
+- Estabilização da base do editor
+    > Loop principal de input consolidado
+    > Renderização desacoplada da lógica de edição
+    > Base preparada para evolução do cursor horizontal
+
+#21/01/2026
+- Implementação do cursor de coluna (CursorColuna).
+- Mudança da renderização:
+    > De WriteLine(texto) para loop por caractere, permitindo cursor no meio da linha.
+- Criação do conceito de linha ativa (linhaAtiva).
+- Cursor em bloco visual usando ForegroundColor e BackgroundColor.
+- Cursor aparece:
+    > Apenas no modo de edição
+    > Na posição correta da coluna
+- Suporte a cursor no final da linha (coluna == texto.Length).
+- Correção do erro lógico:
+    > linha++ e WriteLine() estavam fora do foreach.
+- Navegação horizontal implementada:
+    > ← diminui CursorColuna
+    > → aumenta CursorColuna
+- Ajuste automático da coluna ao trocar de linha (evita overflow).
+- Identificação e correção do motivo pelo qual o cursor não aparecia no modo edição.    
