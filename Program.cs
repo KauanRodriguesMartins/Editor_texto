@@ -24,17 +24,17 @@ void Exibir_arquivo()
     Console.Clear();
 
     int linha = 1;
-
+// =======================================================================================================
     if (modo)
         Console.WriteLine("Modo de Visualização\n");
     else
         Console.WriteLine("Modo de Edição\n");
-
+// =======================================================================================================
     foreach (var texto in SaveMemory)
     {
         bool linhaAtiva = (linha == CursorLinha);
         bool mostrarSeta = (linhaAtiva && modo == false);
-
+// =======================================================================================================
         // ---- número da linha ----
         if (mostrarSeta)
         {
@@ -46,10 +46,12 @@ void Exibir_arquivo()
         {
             Console.Write($"{linha,3} | ");
         }
+    // =======================================================================================================
 
         // ---- conteúdo da linha + cursor de coluna ----
         for (int coluna = 0; coluna <= texto.Length; coluna++)
         {
+// =======================================================================================================
             // cursor em bloco (modo edição)
             if (modo == true && linhaAtiva && coluna == CursorColuna)
             {
@@ -64,15 +66,16 @@ void Exibir_arquivo()
                 Console.ResetColor();
                 continue;
             }
-
+// =======================================================================================================
             if (coluna < texto.Length)
                 Console.Write(texto[coluna]);
+// =======================================================================================================
         }
 
         Console.WriteLine();
         linha++;
     }
-
+// =======================================================================================================
     // ---- rodapé ----
     if (modo == false)
     {
@@ -85,6 +88,7 @@ void Exibir_arquivo()
     {
         Console.WriteLine("\n-- Pressione Esc para voltar ao modo de visualização");
     }
+// =======================================================================================================
 }
 
 
@@ -97,9 +101,10 @@ void LoopEditor()
 
         var tecla = Console.ReadKey(true);
 
-
+// =======================================================================================================
         if (tecla.Key == ConsoleKey.Escape)
         {
+// ------------------------------------------------------------------------------------------------------
             if (modo == false)
             {
                 break;
@@ -110,78 +115,137 @@ void LoopEditor()
                 modo = false;
             }
             Console.Clear();
+// ------------------------------------------------------------------------------------------------------
         }
-
+// =======================================================================================================
         if (modo == false)
         {
+// ------------------------------------------------------------------------------------------------------
+
             if (CursorLinha > 1 && tecla.Key == ConsoleKey.K)
             {
                 CursorLinha--;
-
                 int index = CursorLinha - 1;
                 if (CursorColuna > SaveMemory[index].Length)
                     CursorColuna = SaveMemory[index].Length;
             }
-
+// ------------------------------------------------------------------------------------------------------
             if (CursorLinha < SaveMemory.Count && tecla.Key == ConsoleKey.J)
             {
                 CursorLinha++;
-
                 int index = CursorLinha - 1;
                 if (CursorColuna > SaveMemory[index].Length)
                     CursorColuna = SaveMemory[index].Length;
             }
+// ------------------------------------------------------------------------------------------------------
         }
 
-
+// =======================================================================================================
         if (modo == false)
         {
+// ------------------------------------------------------------------------------------------------------
             if (tecla.Key == ConsoleKey.I)
             {
                 modo = true;
             }
+// ------------------------------------------------------------------------------------------------------
         }
 
+// =======================================================================================================
         if (modo == true)
         {
+// ------------------------------------------------------------------------------------------------------
             if (!char.IsControl(tecla.KeyChar))
             {
                 int index = CursorLinha - 1;
                 SaveMemory[index] = SaveMemory[index].Insert(CursorColuna, tecla.KeyChar.ToString());
                 CursorColuna++;
             }
+// ------------------------------------------------------------------------------------------------------
         }
-
+// =======================================================================================================
         if (modo == true && tecla.Key == ConsoleKey.Backspace)
         {
             int index = CursorLinha - 1;
-
+// ------------------------------------------------------------------------------------------------------
             if (CursorColuna > 0)
             {
                 SaveMemory[index] = SaveMemory[index].Remove(CursorColuna - 1, 1);
                 CursorColuna--;
             }
+// ------------------------------------------------------------------------------------------------------
         }
-
+// =======================================================================================================
         if (modo == true && tecla.Key == ConsoleKey.Enter)
         {
             int index = CursorLinha - 1;
 
-            SaveMemory.Insert(index + 1, "");
-            CursorLinha++;
-        }
+            string linhaAtual = SaveMemory[index];
 
+            string esquerda = linhaAtual.Substring(0, CursorColuna);
+            string direita = linhaAtual.Substring(CursorColuna);
+
+            SaveMemory[index] = esquerda;
+            SaveMemory.Insert(index + 1, direita);
+
+            CursorLinha++;
+            CursorColuna = 0;
+        }
+// =======================================================================================================
+        if (modo == true && tecla.Key == ConsoleKey.Delete)
+        {
+            int index = CursorLinha - 1;
+            string linhaAtual = SaveMemory[index];
+// ------------------------------------------------------------------------------------------------------
+            if (CursorColuna < linhaAtual.Length)
+            {
+                SaveMemory[index] = linhaAtual.Remove(CursorColuna, 1);
+            }
+            else if (CursorLinha < SaveMemory.Count)
+            {
+                string proximaLinha = SaveMemory[index + 1];
+                SaveMemory[index] = linhaAtual + proximaLinha;
+                SaveMemory.RemoveAt(index + 1);
+            }
+ // ------------------------------------------------------------------------------------------------------
+        }
+// =======================================================================================================
         if (modo == true)
         {
             int index = CursorLinha - 1;
             int tamanhoLinha = SaveMemory[index].Length;
+            int finalLinha = SaveMemory[CursorLinha - 1].Length;
 
-            if (tecla.Key == ConsoleKey.LeftArrow && CursorColuna > 0)
-                CursorColuna--;
+// ------------------------------------------------------------------------------------------------------
+            if (tecla.Key == ConsoleKey.LeftArrow)
+            {
+                if (CursorColuna > 0)
+                {
+                    CursorColuna--;
+                }
+                else if (CursorLinha > 1)
+                {
+                    CursorLinha--;
+                    CursorColuna = SaveMemory[CursorLinha - 1].Length;
+                }
+            }
+// ------------------------------------------------------------------------------------------------------
+            if (tecla.Key == ConsoleKey.RightArrow)
+            {
+                if (CursorColuna < tamanhoLinha)
+                {
+                    CursorColuna++;
+                }
+                else if (CursorLinha < SaveMemory.Count)
+                {
+                    CursorLinha++;
+                    CursorColuna = 0;
+                }
+            }
+// ------------------------------------------------------------------------------------------------------
 
-            if (tecla.Key == ConsoleKey.RightArrow && CursorColuna < tamanhoLinha)
-                CursorColuna++;
         }
+// =======================================================================================================
     }
 }
 // \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

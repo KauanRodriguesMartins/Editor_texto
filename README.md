@@ -1,6 +1,6 @@
 Log de mudanças
 
-#14/01/2026
+# 14/01/2026
 - Separação da lógica de leitura de arquivo e exibição do conteúdo
 - Implementação de um buffer de texto em memória usando List<string>
 - Carregamento do arquivo apenas uma vez, evitando leituras repetidas
@@ -30,7 +30,7 @@ Log de mudanças
     > Visual mais claro para navegação
 
 
-#20/01/2026
+# 20/01/2026
 - Implementação do modo insert (edição)
     > Criação de estado para alternar entre modo normal e modo de edição
     > Entrada no modo insert através da tecla I
@@ -60,7 +60,7 @@ Log de mudanças
     > Renderização desacoplada da lógica de edição
     > Base preparada para evolução do cursor horizontal
 
-#21/01/2026
+# 21/01/2026
 - Implementação do cursor de coluna (CursorColuna).
 - Mudança da renderização:
     > De WriteLine(texto) para loop por caractere, permitindo cursor no meio da linha.
@@ -77,3 +77,39 @@ Log de mudanças
     > → aumenta CursorColuna
 - Ajuste automático da coluna ao trocar de linha (evita overflow).
 - Identificação e correção do motivo pelo qual o cursor não aparecia no modo edição.    
+
+# 22/01/2026
+
+- Consolidação do loop principal do editor (`LoopEditor`).
+- Implementação completa da edição de texto em tempo real.
+- Inserção de caracteres na posição do cursor:
+  > Uso de `string.Insert(CursorColuna, char)`
+  > Atualização correta de `CursorColuna` após inserção
+- Implementação do Backspace:
+  > Remove caractere à esquerda do cursor
+  > Atualiza posição do cursor corretamente
+- Implementação do Enter (quebra de linha):
+  > Split da linha atual em duas partes
+  > Parte esquerda permanece na linha atual
+  > Parte direita é inserida como nova linha
+  > Cursor movido para início da nova linha
+- Implementação da tecla Delete:
+  > Remove caractere na posição do cursor
+  > Junta com a próxima linha quando no final da linha
+- Navegação horizontal avançada:
+  > ← move o cursor para a esquerda
+  > → move o cursor para a direita
+  > Transição automática entre linhas ao atingir início/fim
+- Navegação vertical integrada com edição:
+  > `CursorColuna` ajustado automaticamente ao mudar de linha
+  > Evita `ArgumentOutOfRangeException`
+- Correção de erros críticos de índice:
+  > Garantia de que `CursorColuna` nunca ultrapassa o tamanho da linha
+  > Garantia de que `CursorLinha` referencia uma linha válida
+- Evolução do editor para comportamento semelhante a editores reais:
+  > Delete e Enter com comportamento contextual
+  > Cursor coerente entre linhas
+- Identificação de pontos pendentes:
+  > Backspace no início da linha ainda não implementado
+  > Falta clamp global de segurança do cursor
+  > Edge case de arquivo vazio ainda não tratado
