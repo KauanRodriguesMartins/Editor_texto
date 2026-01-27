@@ -10,7 +10,7 @@ Log de mudanças
 - Captura de entrada do teclado com Console.ReadKey
 - Saída controlada do modo editor usando a tecla ESC
 
-#19/01/2026
+# 19/01/2026
 - Implementação do cursor lógico funcional
       > Uso da variável CursorLinha como estad
       > Cursor desenhado como parte da renderização (>)
