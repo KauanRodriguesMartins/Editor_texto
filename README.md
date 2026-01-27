@@ -113,3 +113,60 @@ Log de mudanças
   > Backspace no início da linha ainda não implementado
   > Falta clamp global de segurança do cursor
   > Edge case de arquivo vazio ainda não tratado
+
+# 23/01/2026
+
+- Implementação da funcionalidade de salvar arquivo durante a edição.
+- Criação da função SalvarArquivo():
+    > Uso de File.WriteAllLines para persistir SaveMemory no arquivo.
+    > Caminho de arquivo fixo para testes.
+- Integração do salvamento ao LoopEditor:
+    > Salvamento disponível apenas no modo de edição.
+    > Atalho configurado usando tecla de função (F2).
+- Substituição do atalho Ctrl+S por F2:
+    > Evitou conflitos com Console.ReadKey e KeyChar.
+    > Garantiu captura confiável do input no console.
+- Correção e validação do fluxo de execução:
+    > Salvamento ocorre antes da lógica de inserção.
+    > Tecla F2 não interfere na edição de texto.
+- Confirmação do ciclo completo de persistência:
+    > Editar arquivo
+    > Salvar com F2
+    > Encerrar programa
+    > Reabrir e validar alterações no arquivo
+- Consolidação dos modos do editor:
+    > modo == false → visualização
+    > modo == true  → edição
+- Estabilização geral do LoopEditor:
+    > Fluxo mais linear
+    > Menos condições redundantes
+    > Editor mais previsível e confiável
+
+# 27/01/2026
+- Refatoração do sistema de carregamento de arquivos:
+    > Remoção do caminho hardcoded.
+    > Leitura dinâmica do caminho do arquivo via Console.ReadLine().
+    > Validação de existência do arquivo antes de carregar.
+- Introdução de estado de modificação do arquivo:
+    > Flags dirty e arquivoModificado.
+    > Indicação visual (*) no modo de edição/visualização quando há alterações não salvas.
+- Implementação de salvamento manual com tecla dedicada:
+    > Salvamento usando tecla F2.
+    > Escrita do conteúdo atual (SaveMemory) no arquivo original.
+    > Feedback visual de “Arquivo salvo com sucesso”.
+- Proteção contra saída sem salvar:
+    > Prompt de confirmação ao tentar sair com alterações pendentes.
+    > Opção explícita para sair sem salvar (S/N).
+- Consolidação do fluxo de edição:
+    > Inserção, Backspace, Delete e Enter agora marcam o arquivo como modificado.
+    > Cursor permanece consistente após concatenação de linhas.
+    > Clamp de cursor garante segurança após qualquer operação.
+- Melhoria da experiência de uso:
+    > Cursor em bloco visual mantido.
+    > Home leva ao início da linha.
+    > End leva ao final da linha.
+    > Navegação entre linhas preservando coerência da coluna.
+- Estrutura do editor consolidada como editor de texto funcional em console:
+    > Separação clara entre modo de visualização e modo de edição.
+    > Arquivo carregado, editado, salvo e protegido contra perda de dados.
+
